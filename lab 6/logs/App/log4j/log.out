@@ -1,0 +1,15 @@
+2026-09-16 13:57:52,717 INFO [main] MainClass - Application is starting...
+2026-09-16 13:58:29,820 INFO [main] MainClass - Application is starting...
+2026-09-16 13:58:29,821 WARN [main] InsufficientFundsException - InsufficientFundsException object created: Insufficient funds. Your balance is 700.0
+2026-09-16 13:58:29,822 ERROR [main] MainClass - thrown exception: Insufficient funds. Your balance is 700.0
+InsufficientFundsException: Insufficient funds. Your balance is 700.0
+	at WalletAccount.withdraw(WalletAccount.java:20)
+	at MainClass.main(MainClass.java:14)
+2026-09-16 13:58:29,823 INFO [main] MainClass - Application ends
+2026-09-16 13:58:43,776 INFO [main] MainClass - Application is starting...
+2026-09-16 13:58:43,777 WARN [main] InsufficientFundsException - InsufficientFundsException object created: Insufficient funds. Your balance is 700.0
+2026-09-16 13:58:43,777 ERROR [main] MainClass - thrown exception: Insufficient funds. Your balance is 700.0
+InsufficientFundsException: Insufficient funds. Your balance is 700.0
+	at WalletAccount.withdraw(WalletAccount.java:20)
+	at MainClass.main(MainClass.java:14)
+2026-09-16 13:58:43,778 INFO [main] MainClass - Application ends

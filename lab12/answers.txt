@@ -1,0 +1,58 @@
+Lab 12 - Threads and locks
+
+1. Fixed and cached thread pools
+
+Measured results for 1,000,000 transactions in each case:
+
+1,000 accounts:
+  Fixed pool:  840.96 ms
+  Cached pool: 5824.45 ms
+  Initial and final total: 10,000,000 riyals
+
+10 accounts:
+  Fixed pool:  352.16 ms
+  Cached pool: 5714.42 ms
+  Initial and final total: 100,000 riyals
+  Insufficient-balance rejections: 3896 fixed, 3835 cached
+
+The fixed pool used 8 workers. Both pools allowed at most 128 outstanding
+transactions, so the cached pool could not create an unlimited number of
+active tasks. Each case started with fresh accounts holding 10,000 riyals
+and used the same random seed for both pool types. Timing included task
+submission and execution, but excluded account creation and final printing.
+
+The fixed pool was faster in this run. These are short tasks, so the cached
+pool's thread creation, handoffs and scheduling can cost more than the work
+itself. With only 10 accounts, more transactions compete for the same locks;
+adding threads does not remove that contention. A cached pool is usually
+more useful when tasks spend time waiting on external operations.
+
+These are single-run measurements, not guaranteed rankings on every machine.
+The lower fixed-pool time with 10 accounts can also reflect warmup and better
+locality. Scheduling changes the order of transfers, so the rejected counts
+can differ despite using the same candidate transactions. Rejected transfers
+do not change either balance.
+
+2. What could go wrong after replacing synchronized with locks?
+
+Deadlock: one transaction can lock account A and wait for B, while another
+locks B and waits for A. Neither transaction can continue. An exception can
+also leave an account locked if unlock is not placed in a finally block.
+
+3. Resource ordering solution
+
+Every transaction locks the account with the lower id first, then the other
+account. If two different accounts have the same id, a unique sequence number
+breaks the tie. This gives all transactions the same total order and removes
+circular waiting. Both locks cover the balance check, withdrawal and deposit.
+Locks are released in reverse order using finally blocks.
+
+Run the fixed-pool main program from lab12:
+  mvn clean package exec:java
+
+Run the cached-pool main program:
+  mvn exec:java -Dexec.mainClass=edu.psu.se411.lab12_threads.CachedPoolApp
+
+Both programs run the 1,000-account and 10-account cases by default.
+Run the automated checks:
+  mvn test

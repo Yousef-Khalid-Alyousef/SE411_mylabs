@@ -1,0 +1,1 @@
+A negative product id returns HTTP 400 Bad Request.
